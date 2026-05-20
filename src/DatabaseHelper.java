@@ -19,7 +19,6 @@ public class DatabaseHelper {
         }
     }
 
-    // save one message into DB
     public void saveMessage(String sender, String content, String type) {
         String sql = "INSERT INTO messages(sender, content, type) VALUES(?,?,?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {

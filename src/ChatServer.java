@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class ChatServer {
-    private static final int PORT = 12345; // server port
+    private static final int PORT = 12823; 
     private static Set<ClientHandler> clients = ConcurrentHashMap.newKeySet(); 
     private static DatabaseHelper db = new DatabaseHelper(); // save messages
 
@@ -12,7 +12,7 @@ public class ChatServer {
         System.out.println("Chat Server started...");
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             while (true) {
-                Socket socket = serverSocket.accept(); // wait client
+                Socket socket = serverSocket.accept(); 
                 ClientHandler handler = new ClientHandler(socket);
                 clients.add(handler);
                 new Thread(handler).start(); 
@@ -22,7 +22,6 @@ public class ChatServer {
         }
     }
 
-    // send message to everyone except sender
     public static void broadcast(String message, ClientHandler sender) {
         db.saveMessage("User", message, "text"); 
         for (ClientHandler client : clients) {
@@ -48,8 +47,30 @@ public class ChatServer {
 
                 String message;
                 while ((message = in.readLine()) != null) {
-                    System.out.println("Received: " + message);
-                    ChatServer.broadcast(message, this);
+                    if (message.startsWith("PHOTO:")) {
+                        String[] parts = message.split(":");
+                        String username = parts[1];
+                        String filename = parts[2];
+                        long filesize = Long.parseLong(parts[3]);
+
+                        FileOutputStream fos = new FileOutputStream("received_" + filename);
+                        InputStream is = socket.getInputStream();
+                        byte[] buffer = new byte[4096];
+                        long remaining = filesize;
+                        int bytesRead;
+                        while (remaining > 0 && (bytesRead = is.read(buffer, 0, (int)Math.min(buffer.length, remaining))) != -1) {
+                            fos.write(buffer, 0, bytesRead);
+                            remaining -= bytesRead;
+                        }
+                        fos.close();
+
+                        String notifyMsg = username + " sent a photo: " + filename;
+                        System.out.println("Received photo from " + username + " (" + filename + ")");
+                        ChatServer.broadcast(notifyMsg, this);
+                    } else {
+                        System.out.println("Received: " + message);
+                        ChatServer.broadcast(message, this);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();

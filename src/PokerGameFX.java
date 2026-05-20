@@ -48,19 +48,28 @@ public class PokerGameFX extends Application {
     @Override
     public void start(Stage stage) {
         Label player1Label = new Label("Player 1 hand:");
+        player1Label.setStyle("-fx-font-weight: bold; -fx-text-fill: #2980b9; -fx-font-size: 14px;");
         Label player2Label = new Label("Player 2 hand:");
+        player2Label.setStyle("-fx-font-weight: bold; -fx-text-fill: #c0392b; -fx-font-size: 14px;");
         Label resultLabel = new Label("Result will appear here");
+        resultLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #27ae60; -fx-font-weight: bold;");
         Label scoreLabel = new Label("Scores → Player 1: 0 | Player 2: 0");
+        scoreLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #8e44ad;");
 
         HBox player1Cards = new HBox(10);
+        player1Cards.setStyle("-fx-padding: 10; -fx-background-color: #ecf0f1;");
         HBox player2Cards = new HBox(10);
+        player2Cards.setStyle("-fx-padding: 10; -fx-background-color: #fdf2f2;");
 
         Button dealButton = new Button("Deal Cards");
+        dealButton.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
         Button newGameButton = new Button("New Game");
+        newGameButton.setStyle("-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
         Button rulesButton = new Button("Rules");
+        rulesButton.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
         Button exitButton = new Button("Exit");
+        exitButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
 
-        // Deal button logic
         dealButton.setOnAction(e -> {
             Deck deck = new Deck();
             List<Card> player1 = new ArrayList<>();
@@ -75,8 +84,12 @@ public class PokerGameFX extends Application {
                 player1.add(c1);
                 player2.add(c2);
 
-                player1Cards.getChildren().add(new Label(c1.toString()));
-                player2Cards.getChildren().add(new Label(c2.toString()));
+                Label l1 = new Label(c1.toString());
+                l1.setStyle("-fx-background-color: #d6eaf8; -fx-padding: 5; -fx-border-color: #2980b9;");
+                Label l2 = new Label(c2.toString());
+                l2.setStyle("-fx-background-color: #fadbd8; -fx-padding: 5; -fx-border-color: #c0392b;");
+                player1Cards.getChildren().add(l1);
+                player2Cards.getChildren().add(l2);
             }
 
             String[] ranks = {"2","3","4","5","6","7","8","9","10","J","Q","K","A"};
@@ -96,34 +109,32 @@ public class PokerGameFX extends Application {
             scoreLabel.setText("Scores → Player 1: " + player1Wins + " | Player 2: " + player2Wins);
         });
 
-        // New Game button logic
         newGameButton.setOnAction(e -> {
             player1Cards.getChildren().clear();
             player2Cards.getChildren().clear();
             resultLabel.setText("Result will appear here");
         });
 
-        // Rules button logic
         rulesButton.setOnAction(e -> {
             Alert rulesAlert = new Alert(Alert.AlertType.INFORMATION);
             rulesAlert.setTitle("Poker Game Rules");
             rulesAlert.setHeaderText("Simplified Rules");
             rulesAlert.setContentText("Each player is dealt 5 cards.\n"
                     + "The player with the highest ranked card wins.\n"
-                    + "Ranks go from 2 (lowest) to Ace (highest).\n"
-                   );
+                    + "Ranks go from 2 (lowest) to Ace (highest).\n");
             rulesAlert.showAndWait();
         });
 
-        // Exit button logic
         exitButton.setOnAction(e -> stage.close());
 
-        // Layout
         HBox buttonBar = new HBox(10, dealButton, newGameButton, rulesButton, exitButton);
+        buttonBar.setStyle("-fx-padding: 10; -fx-background-color: #bdc3c7;");
+
         VBox root = new VBox(15, buttonBar, player1Label, player1Cards, player2Label, player2Cards, resultLabel, scoreLabel);
+        root.setStyle("-fx-padding: 15; -fx-background-color: linear-gradient(to bottom, #f5f7fa, #d6dbdf);");
 
         Scene scene = new Scene(root, 600, 400);
-        stage.setTitle("Poker Game");
+        stage.setTitle("Poker Game 🎲");
         stage.setScene(scene);
         stage.show();
     }

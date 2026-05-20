@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Launch ChatServer",
+      "request": "launch",
+      "mainClass": "ChatServer"
+    },
+    {
+      "type": "java",
+      "name": "Launch ChatClientFX",
+      "request": "launch",
+      "mainClass": "ChatClientFX",
+      "vmArgs": "--module-path lib --add-modules javafx.controls,javafx.fxml -Djava.library.path=bin"
+    },
+    {
+      "type": "java",
+      "name": "Launch StudentNotepadFX",
+      "request": "launch",
+      "mainClass": "StudentNotepadFX",
+      "vmArgs": "--module-path lib --add-modules javafx.controls,javafx.fxml -Djava.library.path=bin"
+    },
+    {
+      "type": "java",
+      "name": "Launch PokerGameFX",
+      "request": "launch",
+      "mainClass": "PokerGameFX",
+      "vmArgs": "--module-path lib --add-modules javafx.controls,javafx.fxml -Djava.library.path=bin"
+    }
+  ]
+}

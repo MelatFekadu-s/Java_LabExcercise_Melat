@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-
 import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,19 +28,21 @@ public class StudentNotepadFX extends Application {
 
         searchField = new TextField();
         searchButton = new Button("Search");
+        searchButton.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
 
         ToolBar searchBar = new ToolBar(new Label("Find:"), searchField, searchButton);
 
         fileChooser = new FileChooser();
 
-        // Menu bar
         MenuBar menuBar = new MenuBar();
         Menu fileMenu = new Menu("File");
         MenuItem openItem = new MenuItem("Open");
+        openItem.setStyle("-fx-text-fill: #2980b9;");
         MenuItem saveItem = new MenuItem("Save");
+        saveItem.setStyle("-fx-text-fill: #27ae60;");
         MenuItem exitItem = new MenuItem("Exit");
+        exitItem.setStyle("-fx-text-fill: #e74c3c;");
 
-        // Shortcuts
         openItem.setAccelerator(KeyCombination.keyCombination("Ctrl+O"));
         saveItem.setAccelerator(KeyCombination.keyCombination("Ctrl+S"));
         exitItem.setAccelerator(KeyCombination.keyCombination("Ctrl+Q"));
@@ -49,7 +50,6 @@ public class StudentNotepadFX extends Application {
         fileMenu.getItems().addAll(openItem, saveItem, new SeparatorMenuItem(), exitItem);
         menuBar.getMenus().add(fileMenu);
 
-        // Actions
         openItem.setOnAction(e -> openFile(stage));
         saveItem.setOnAction(e -> saveFile(stage));
         exitItem.setOnAction(e -> stage.close());
@@ -90,45 +90,39 @@ public class StudentNotepadFX extends Application {
         }
     }
 
-   //  Show preview window with highlights
-   private void showHighlightPreview(String word) {
-    String content = textArea.getText();
-    TextFlow textFlow = new TextFlow();
+    private void showHighlightPreview(String word) {
+        String content = textArea.getText();
+        TextFlow textFlow = new TextFlow();
 
-    if (word == null || word.isEmpty()) {
-        textFlow.getChildren().add(new Text(content));
-    } else {
-        Pattern pattern = Pattern.compile(Pattern.quote(word), Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(content);
+        if (word == null || word.isEmpty()) {
+            textFlow.getChildren().add(new Text(content));
+        } else {
+            Pattern pattern = Pattern.compile(Pattern.quote(word), Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(content);
 
-        int lastEnd = 0;
-        while (matcher.find()) {
-            // Normal text before match
-            if (matcher.start() > lastEnd) {
-                textFlow.getChildren().add(new Text(content.substring(lastEnd, matcher.start())));
+            int lastEnd = 0;
+            while (matcher.find()) {
+                if (matcher.start() > lastEnd) {
+                    textFlow.getChildren().add(new Text(content.substring(lastEnd, matcher.start())));
+                }
+
+                Label highlight = new Label(content.substring(matcher.start(), matcher.end()));
+                highlight.setStyle("-fx-background-color: yellow; -fx-text-fill: black;");
+                textFlow.getChildren().add(highlight);
+
+                lastEnd = matcher.end();
             }
 
-            // Highlighted match using Label (supports background color)
-            Label highlight = new Label(content.substring(matcher.start(), matcher.end()));
-            highlight.setStyle("-fx-background-color: yellow; -fx-text-fill: black;");
-            textFlow.getChildren().add(highlight);
-
-            lastEnd = matcher.end();
+            if (lastEnd < content.length()) {
+                textFlow.getChildren().add(new Text(content.substring(lastEnd)));
+            }
         }
 
-        // Remaining text
-        if (lastEnd < content.length()) {
-            textFlow.getChildren().add(new Text(content.substring(lastEnd)));
-        }
+        Stage previewStage = new Stage();
+        previewStage.setTitle("Search Preview");
+        previewStage.setScene(new Scene(new ScrollPane(textFlow), 600, 400));
+        previewStage.show();
     }
-
-    // Show in a new window
-    Stage previewStage = new Stage();
-    previewStage.setTitle("Search Preview");
-    previewStage.setScene(new Scene(new ScrollPane(textFlow), 600, 400));
-    previewStage.show();
-}
-
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
