@@ -1,4 +1,4 @@
-# Student Projects (JavaFX)
+# Projects (JavaFX)
 
 This repository contains three JavaFX applications: **ChatBox**, **StudentNotepadFX**, and **PokerGameFX**.  
 Each project demonstrates different aspects of software engineering: networking, GUI design, file I/O, and object‑oriented programming.
